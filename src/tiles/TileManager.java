@@ -1,7 +1,6 @@
 package tiles;
 
 import window.GamePanel;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -10,20 +9,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class TileManager {
-    GamePanel gp;
-    Tile[] tiles;
-    int mapTileNum[][];
+    private GamePanel gp;
+    public Tile[] tiles;
+    public int mapTileNum[][];
     private int tileSize = 50;
 
     public TileManager(GamePanel gp){
         this.gp = gp;
         tiles = new Tile[10];
         mapTileNum = new int[gp.getScreenCol()][gp.getScreenRow()];
-        getTileImage();
+        importTileImage();
         loadMap();
     }
 
-    public void getTileImage() {
+    //method for importing tile images
+    public void importTileImage() {
         try{
             tiles[0] = new Tile();
             tiles[0].img = ImageIO.read(getClass().getResourceAsStream("/TileEmpty.png"));
@@ -82,6 +82,7 @@ public class TileManager {
         }
     }
 
+    //method for loading map
     public void loadMap(){
         try{
             InputStream is = getClass().getResourceAsStream("/Map.txt");
@@ -103,6 +104,7 @@ public class TileManager {
                     mapTileNum[col][row] = num;
                     col++;
                 }
+
                 if (col == gp.getScreenCol()) {
                     col = 0;
                     row++;
@@ -112,18 +114,5 @@ public class TileManager {
         }catch(Exception e){
             e.printStackTrace();
         }
-    }
-
-
-    public int[][] getMapTileNum() {
-        return mapTileNum;
-    }
-
-    public Tile[] getTiles() {
-        return tiles;
-    }
-
-    public int getTileSize() {
-        return tileSize;
     }
 }

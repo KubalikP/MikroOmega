@@ -1,5 +1,8 @@
 package entities;
 
+import tiles.Tile;
+import window.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,27 +16,35 @@ public class Player extends Entity{
     private BufferedImage imgIdle, imgRun, imgRunLeft, imgJump, imgDie, imgNormalAttack;
     private int playerAction;
     private int animTick, animIndex, animRate = 20;
-    private boolean moving = false;
     private boolean attacking = false;
     private boolean jumping = false;
     private float jumpHeight = 12;
     private boolean left, right;
-    private float playerSpeed = 2;
+    private int playerSpeed = 2;
     private float gravity = 3f;
     private boolean onGround;
+    private GamePanel gp;
 
-    public Player(int worldX, int worldY, int width, int height) {
+    public Player(int worldX, int worldY, int width, int height, GamePanel gp) {
         super(worldX, worldY, width, height);
+        this.gp = gp;
+        hitbox = new Rectangle();
+        hitbox.x = 0;
+        hitbox.y = 0;
+        hitbox.width = 128;
+        hitbox.height = 128;
         importImage();
         loadAnim();
     }
 
+    //method for updating animations and player position
     public void update(){
         updatePos();
         updateAnim();
         setAnim();
     }
 
+    //method for rendering animations
     public void render(Graphics g) {
         BufferedImage[] currentAnim = null;
 
@@ -54,6 +65,7 @@ public class Player extends Entity{
         g.drawImage(currentAnim[animIndex], worldX, worldY, width, height, null);
     }
 
+    //method for loading player animations
     public void loadAnim() {
         idleAnim = new BufferedImage[6];
         dieAnim = new BufferedImage[4];
@@ -87,6 +99,7 @@ public class Player extends Entity{
         }
     }
 
+    //method for updating player animations
     public void updateAnim() {
         animTick++;
         if(animTick >= animRate){
@@ -115,6 +128,8 @@ public class Player extends Entity{
         }
     }
 
+
+    //method for detecting player action and setting animations
     public void setAnim() {
         int startAnim = playerAction;
 
@@ -140,16 +155,13 @@ public class Player extends Entity{
         }
     }
 
+    //method for updating player position in game
     public void updatePos() {
-        moving = false;
-
         if(!attacking) {
             if(left && !right) {
                 worldX -= playerSpeed;
-                moving = true;
             } else if(right && !left) {
                 worldX += playerSpeed;
-                moving = true;
             }
         }
 
@@ -181,6 +193,7 @@ public class Player extends Entity{
         }
     }
 
+    //method for importing player sprites
     private void importImage() {
         InputStream is1 = getClass().getResourceAsStream("/PlayerIdle.png");
         InputStream is2 = getClass().getResourceAsStream("/PlayerRun.png");
@@ -199,6 +212,7 @@ public class Player extends Entity{
             e.printStackTrace();
         }
     }
+
     public void setLeft(boolean left) {
         this.left = left;
     }

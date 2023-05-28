@@ -3,7 +3,6 @@ package inputs;
 import window.GamePanel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import entities.Player;
 
 public class KeyboardInputs implements KeyListener {
     private GamePanel gp;
@@ -38,6 +37,20 @@ public class KeyboardInputs implements KeyListener {
             case KeyEvent.VK_SPACE:
                 gp.getGame().getPlayer().setJumping(true);
                 break;
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            if(gp.gameState == gp.playState){
+                gp.gameState = gp.pauseState;
+            } else if(gp.gameState == gp.pauseState){
+                gp.gameState = gp.playState;
+            }
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            if(gp.gameState == gp.menuState){
+                gp.gameState = gp.playState;
+            }
         }
     }
 
